@@ -2,7 +2,7 @@ import { baseUrl } from "../constants";
 
 const sendText = async () => {
     const token = JSON.parse(localStorage.getItem('user')).token;
-    const userText = {text: 'What does 3 * 2 equal to?'};
+    const userText = {text: 'Why is the sky blue?'};
     
     const response = await fetch(`${baseUrl}/openai/openai-response/`, {
         method: 'POST',
@@ -22,6 +22,10 @@ const sendText = async () => {
     return data;
 }
 
-const chatService = { sendText };
+const sendRecording = async (formData, audioLengthData) => {
+
+}
+
+const chatService = { sendText, sendRecording };
 
 export default chatService;
