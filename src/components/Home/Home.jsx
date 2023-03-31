@@ -1,6 +1,6 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../../services/authService';
-import { useEffect } from 'react';
 import chatService from '../../services/chatService';
 
 const Home = () => {
@@ -19,6 +19,7 @@ const Home = () => {
                 console.log(err);
             });
     };
+
 
     return (
         <section className="content-wrapper">
