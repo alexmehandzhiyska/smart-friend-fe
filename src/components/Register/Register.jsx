@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { authService } from '../../services/authService';
 import { useForm } from "react-hook-form";
 
+import './Register.css';
+
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
@@ -10,28 +12,34 @@ const Register = () => {
         authService.register(data)
             .then(res => {
                 localStorage.setItem('user', JSON.stringify(res));
-                console.log(res);
-                // navigate('/');
+                navigate('/');
             })
             .catch(err => {
                 console.log(err);
-            })
-    }
+            });
+    };
     
     return (
-        <section>
-            <form method="POST" onSubmit={handleSubmit(registerUser)}>
-                <label htmlFor="username">Username</label>
-                <input type="text" id="username" name="username" {...register('username')} />
+        <section className="content-wrapper">
+            <article className="avatar-wrapper">
+                <img src="https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png" className="avatar" alt="" />
+            </article>
 
-                <label htmlFor="email">Email</label>
-                <input type="email" id="email" name="email" {...register('email')} />
+            <article className="form-wrapper">
+                <section>
+                    <h1 className="title">Create your account</h1>
+                    
+                    <form method="POST" onSubmit={handleSubmit(registerUser)}>
+                        <input type="text" id="username" name="username" placeholder="Username" {...register('username')} />
+                        <input type="email" id="email" name="email" placeholder="Email" {...register('email')} />
+                        <input type="password" id="password" name="password" placeholder="Password" {...register('password')} />
 
-                <label htmlFor="password">Password</label>
-                <input type="password" id="password" name="password" {...register('password')} />
-
-                <input type="submit" value="Submit" />
-            </form>
+                        <input type="submit" value="Submit" />
+                    </form>
+                </section>
+                
+            </article>
+            
         </section>
     );
 }

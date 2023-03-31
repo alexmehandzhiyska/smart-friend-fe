@@ -10,19 +10,18 @@ const Login = () => {
         authService.login(data)
             .then(res => {
                 localStorage.setItem('user', JSON.stringify(res));
-                console.log(res);
-                // navigate('/');
+                navigate('/');
             })
             .catch(err => {
                 console.log(err);
             })
-    }
+    };
     
     return (
-        <section>
+        <section className="content-wrapper">
             <form method="POST" onSubmit={handleSubmit(loginUser)}>
-                <label htmlFor="email">Email</label>
-                <input type="email" id="email" name="email" {...register('email')} />
+                <label htmlFor="username">Username</label>
+                <input type="username" id="username" name="username" {...register('username')} />
 
                 <label htmlFor="password">Password</label>
                 <input type="password" id="password" name="password" {...register('password')} />

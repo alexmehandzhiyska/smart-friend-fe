@@ -1,0 +1,22 @@
+.content-wrapper {
+    display: flex;
+    min-height: 100vh;
+    width: 100vw;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.avatar {
+    width: 250px;
+}
+
+.content-wrapper article {
+    max-width: 50vw;
+}
+
+.form-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

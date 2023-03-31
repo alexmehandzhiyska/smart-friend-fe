@@ -29,7 +29,7 @@ const register = async (userData) => {
 
 const login = async (userData) => {
     const user = {
-        email: userData.email,
+        username: userData.username,
         password: userData.password
     };
 
@@ -51,4 +51,23 @@ const login = async (userData) => {
     return data;
 };
 
-export const authService = { register, login };
+const logout = async () => {
+    const token = JSON.parse(localStorage.getItem('user')).token;
+
+    const response = await fetch(`${baseUrl}/auth/logout/`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data);
+    }
+
+    localStorage.removeItem('user');
+    return 'success';
+}
+
+export const authService = { register, login, logout };
