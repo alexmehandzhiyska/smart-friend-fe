@@ -10,8 +10,13 @@ import './Home.css';
 import image1 from '../../assets/avatar_green_normal.png';
 import image2 from '../../assets/avatar_green_talk.png';
 
+
 const Home = () => {
+    const [imageSrc, setImageSrc] = useState(image1);
+    const [previousImageSrc, setPreviousImageSrc] = useState(image2);
+    const [duration, setDuration] = useState(0);
     const [messages, setMessages] = useState([]);
+    const [voicesLoaded, setVoicesLoaded] = useState(false);
     const [messageSent, setMessageSent] = useState(false);
     const [recordingStarted, setRecordingStarted] = useState(false);
     const [transcript, setTranscript] = useState('');
@@ -23,6 +28,7 @@ const Home = () => {
         if (!messageSent) {
             chatService.sendText('')
             .then(res => {
+                textToSpeech(res.response);
                 setMessages([res.response]);
             })
             .catch(err => {
@@ -32,14 +38,54 @@ const Home = () => {
     }, [messageSent]);
     
     const handleImageClick = () => {
+    const handleImageClick = () => {
         setImageSrc(previousImageSrc);
         setPreviousImageSrc(imageSrc);
-        
+
         setTimeout(() => {
             setPreviousImageSrc(previousImageSrc);
             setImageSrc(imageSrc);
-        }, 5000);
+          }, 5000);
     };
+
+    const setVoices = (utterance) => {
+        const voice = speechSynthesis.getVoices().find(
+            (v) => v.lang === 'en-GB' && v.name.includes('Female')
+        );
+
+        utterance.voice = voice;
+    }
+
+    const textToSpeech = (text) => {
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        if (voicesLoaded) {
+            setVoices(utterance);
+            speechSynthesis.speak(utterance);
+        }
+
+        speechSynthesis.onvoiceschanged = () => {
+            setVoices(utterance);
+            speechSynthesis.speak(utterance);
+            setVoicesLoaded(true);
+        };
+    
+        utterance.onboundary = (event) => {
+            let startTime, endTime;
+    
+            if (event.name === 'word') {
+                if (startTime === 0) {
+                    startTime = event.elapsedTime;
+                } else {
+                    endTime = event.elapsedTime;
+                }
+            }
+    
+            utterance.onend = () => {
+                setDuration(endTime - startTime);
+            };
+        };
+    }
 
     const sendMessage = () => {
         const message = messageRef.current.value;
@@ -48,8 +94,12 @@ const Home = () => {
 
         chatService.sendText(message)
             .then((res) => {
-                const curMessages = [...messages, message, res.response];
-                setMessages(curMessages.reverse());
+                textToSpeech(res.response);
+                setMessages([...messages, message, res.response]);
+
+                setTimeout(() => {
+                    setDuration(0);
+                }, duration)
             })
             .catch((err) => {
                 console.log(err);
@@ -78,7 +128,7 @@ const Home = () => {
                     <FontAwesomeIcon onClick={sendMessage} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
                 </div>
             </article>
-        </section>
+        </section >
     )
 };
 
