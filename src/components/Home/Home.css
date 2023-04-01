@@ -42,4 +42,8 @@
 
 .avatar img{
     width: 250px;
+    margin: auto;
+}
+.avatar{
+    width: 100%;
 }
