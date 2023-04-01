@@ -13,9 +13,11 @@ import image2 from '../../assets/avatar_green_talk.png';
 const Home = () => {
     const [messages, setMessages] = useState([]);
     const [messageSent, setMessageSent] = useState(false);
-    const messageRef = useRef(null);
+    const [recordingStarted, setRecordingStarted] = useState(false);
+    const [transcript, setTranscript] = useState('');
     const [imageSrc, setImageSrc] = useState(image1);
-  const [previousImageSrc, setPreviousImageSrc] = useState(image2);
+    const [previousImageSrc, setPreviousImageSrc] = useState(image2);
+    const messageRef = useRef(null);
 
     useEffect(() => {
         if (!messageSent) {
@@ -29,15 +31,15 @@ const Home = () => {
         }
     }, [messageSent]);
     
-      const handleImageClick = () => {
-        
+    const handleImageClick = () => {
         setImageSrc(previousImageSrc);
         setPreviousImageSrc(imageSrc);
+        
         setTimeout(() => {
             setPreviousImageSrc(previousImageSrc);
             setImageSrc(imageSrc);
-          }, 5000);
-      };
+        }, 5000);
+    };
 
     const sendMessage = () => {
         const message = messageRef.current.value;
@@ -46,7 +48,8 @@ const Home = () => {
 
         chatService.sendText(message)
             .then((res) => {
-                setMessages([...messages, message, res.response]);
+                const curMessages = [...messages, message, res.response];
+                setMessages(curMessages.reverse());
             })
             .catch((err) => {
                 console.log(err);
@@ -55,16 +58,20 @@ const Home = () => {
 
     return (
         <section className="home-page">
-            <article className="chat">
-                {messages.map(message => <h3 class="sent-message">{message}</h3>)}
-            </article>
+            <article className="main-content">
+                <section className="avatar">
+                    <img src={imageSrc} onClick={handleImageClick} alt=''/>
+                </section>
 
-            <article className="avatar">
-                <img src={imageSrc} onClick={handleImageClick} alt=''/>
+                <section className="chat">
+                    {recordingStarted && <h3 className="sent-message">{transcript}</h3>}
+                    {messages.map(message => <h3 className="sent-message">{message}</h3>)}
+                </section>
             </article>
-            
+           
+
             <article className="send-message">
-                <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} />
+                <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} setTranscript={setTranscript} setRecordingStarted={setRecordingStarted} />
 
                 <div className="message-prompt">
                     <input ref={messageRef} type="text" name="message" id="message" placeholder="Message"  onClick={handleImageClick}/>

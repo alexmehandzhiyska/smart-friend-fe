@@ -4,7 +4,7 @@ import chatService from '../../../services/chatService';
 
 import './Dictaphone.css';
 
-const Dictaphone = ({ messages, setMessages, setMessageSent }) => {
+const Dictaphone = ({ messages, setMessages, setMessageSent, setTranscript, setRecordingStarted }) => {
     const {
         transcript,
         resetTranscript,
@@ -22,6 +22,11 @@ const Dictaphone = ({ messages, setMessages, setMessageSent }) => {
         });
     };
 
+    const updateTranscript = () => {
+        setTranscript(transcript);
+        setRecordingStarted(true);
+    }
+
     useEffect(() => {
         const intervalId = setInterval(() => {
             if (transcriptRef.current) {
@@ -30,7 +35,9 @@ const Dictaphone = ({ messages, setMessages, setMessageSent }) => {
                 if (currentText == textTranscript && currentText != '') {
                     chatService.sendText(currentText)
                         .then(res => {
-                            setMessages([...messages, currentText, res.response]);
+                            const prevMessages = messages.reverse();
+                            const curMessages = [currentText, res.response].reverse();
+                            setMessages([...curMessages, ...prevMessages]);
                             resetTranscript();
                             setMessageSent(true);
 
@@ -47,13 +54,13 @@ const Dictaphone = ({ messages, setMessages, setMessageSent }) => {
     
                 setTextTranscript(currentText);
             }
-        }, 1000);
+        }, 3000);
     }, [textTranscript]);
 
     return (
         <div className="dictaphone">
             <button  onClick={startListening} className="primary-btn">Begin conversation</button>
-            <p ref={transcriptRef} onChange={() => setTextTranscript('hi')} className="transcript-ref">{transcript}</p>
+            <p ref={transcriptRef} onChange={updateTranscript()} className="transcript-ref">{transcript}</p>
             <p>or</p>
         </div>
     );
