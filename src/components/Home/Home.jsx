@@ -20,8 +20,6 @@ const Home = () => {
     const [messageSent, setMessageSent] = useState(false);
     const [recordingStarted, setRecordingStarted] = useState(false);
     const [transcript, setTranscript] = useState('');
-    const [imageSrc, setImageSrc] = useState(image1);
-    const [previousImageSrc, setPreviousImageSrc] = useState(image2);
     const messageRef = useRef(null);
 
     useEffect(() => {
@@ -37,7 +35,6 @@ const Home = () => {
         }
     }, [messageSent]);
     
-    const handleImageClick = () => {
     const handleImageClick = () => {
         setImageSrc(previousImageSrc);
         setPreviousImageSrc(imageSrc);
