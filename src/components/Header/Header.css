@@ -1,0 +1,17 @@
+header {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    min-height: 5vh;
+    background: lightgray;
+    padding: 0 3em;
+}
+
+.navbar {
+    list-style: none;
+}
+
+.navbar-item {
+    color: black;
+    text-decoration: none;
+}

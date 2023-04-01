@@ -20,6 +20,18 @@ code {
     monospace;
 }
 
+.content-wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+main {
+  min-height: 80vh;
+}
+
 .title {
   font-size: 1.75rem;
   color: var(--green);
@@ -43,6 +55,13 @@ form input {
   width: 27em;
   color: white;
   background: var(--green);
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
 }
 
 @media screen and (max-width: 768px) {
