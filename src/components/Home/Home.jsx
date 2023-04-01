@@ -30,18 +30,23 @@ const Home = () => {
     //     }
     // }, []);
 
-    useEffect(() => {
+    /*useEffect(() => {
         const timeout = setTimeout(() => {
           setPreviousImageSrc(imageSrc);
           setImageSrc(previousImageSrc);
         }, 5000);
     
         return () => clearTimeout(timeout);
-      }, [imageSrc, previousImageSrc]);
+      }, [imageSrc, previousImageSrc]);*/
     
       const handleImageClick = () => {
+        
         setImageSrc(previousImageSrc);
-        setPreviousImageSrc(image1);
+        setPreviousImageSrc(imageSrc);
+        setTimeout(() => {
+            setPreviousImageSrc(previousImageSrc);
+            setImageSrc(imageSrc);
+          }, 5000);
       };
 
     const sendMessage = () => {
