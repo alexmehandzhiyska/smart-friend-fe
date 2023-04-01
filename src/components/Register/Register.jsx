@@ -62,7 +62,7 @@ const Register = () => {
               {...register("password")}
             />
 
-            <input className="submit" type="submit" value="Submit" />
+            <input type="submit" value="Submit" className="submit primary-btn" />
           </form>
         </section>
       </article>

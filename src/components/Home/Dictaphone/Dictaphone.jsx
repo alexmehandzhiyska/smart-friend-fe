@@ -1,7 +1,8 @@
-import React from 'react';
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import chatService from '../../services/chatService';
+import chatService from '../../../services/chatService';
+
+import './Dictaphone.css';
 
 const Dictaphone = ({ setReply }) => {
     const {
@@ -47,13 +48,11 @@ const Dictaphone = ({ setReply }) => {
     }, [textTranscript]);
 
     return (
-        <div>
-        <p>Microphone: {listening ? 'on' : 'off'}</p>
-        <button onClick={startListening}>Start</button>
-        <button onClick={SpeechRecognition.stopListening}>Stop</button>
-        <button onClick={resetTranscript}>Reset</button>
-        <p ref={transcriptRef} onChange={() => setTextTranscript('hi')}>{transcript}</p>
-
+        <div className="dictaphone">
+            {/* <p>Microphone: {listening ? 'on' : 'off'}</p> */}
+            <button  onClick={startListening} className="primary-btn">Begin conversation</button>
+            <p ref={transcriptRef} onChange={() => setTextTranscript('hi')}>{transcript}</p>
+            <p>or</p>
         </div>
     );
 };

@@ -20,13 +20,6 @@ const Login = () => {
             })
     };
 
-    const styles = theme => ({
-        notchedOutline: {
-          borderWidth: "1px",
-          borderColor: "yellow !important"
-        }
-      });
-
     return (
         <section className="content-wrapper">
             <form method="POST" onSubmit={handleSubmit(loginUser)}>
@@ -35,7 +28,7 @@ const Login = () => {
                 <TextField type="username" id="username" name="username" {...register('username')} label="Username" variant="outlined" sx={{my: 2}} color="success" ></TextField>
                 <TextField type="password" id="password" name="password" {...register('password')} label='Password' variant="outlined" sx={{my: 2}} color="success"></TextField>
 
-                <input type="submit" value="Submit" className='submit'/>
+                <input type="submit" value="Submit" className="submit primary-btn"/>
             </form>
         </section>
     );

@@ -5,6 +5,7 @@ import './Header.css';
 
 const Header = () => {
     const navigate = useNavigate();
+    const user = localStorage.getItem('user');
 
     const logoutUser = () => {
         authService.logout()
@@ -20,7 +21,7 @@ const Header = () => {
         <header>
             <ul className="navbar">
                 <li>
-                    <Link onClick={logoutUser} className="navbar-item">Logout</Link>
+                    {user && <Link onClick={logoutUser} className="navbar-item">Logout</Link>}
                 </li>
             </ul>
         </header>

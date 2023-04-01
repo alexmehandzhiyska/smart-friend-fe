@@ -30,6 +30,7 @@ code {
 
 main {
   min-height: 80vh;
+  max-width: 100vw;
 }
 
 .title {
@@ -53,8 +54,14 @@ form input {
 .submit {
   height: 40px;
   width: 27em;
+}
+
+.primary-btn {
   color: white;
   background: var(--green);
+  border: none;
+  border-radius: 4px;
+  padding: 10px 30px;
 }
 
 .page-wrapper {
