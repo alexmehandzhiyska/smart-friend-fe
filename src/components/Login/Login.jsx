@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
 import { useForm } from 'react-hook-form';
+import { TextField } from '@mui/material';
+
+import './Login.css'
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -20,11 +23,13 @@ const Login = () => {
     return (
         <section className="content-wrapper">
             <form method="POST" onSubmit={handleSubmit(loginUser)}>
+                
+                <TextField type="username" id="username" name="username" {...register('username')} label="Username" variant="outlined"></TextField>
                 <label htmlFor="username">Username</label>
-                <input type="username" id="username" name="username" {...register('username')} />
 
+                
+                <input type="password" id="password" name="password" {...register('password')} autoComplete='off'/>
                 <label htmlFor="password">Password</label>
-                <input type="password" id="password" name="password" {...register('password')} />
 
                 <input type="submit" value="Submit" />
             </form>
