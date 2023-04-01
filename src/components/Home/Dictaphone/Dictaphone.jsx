@@ -4,7 +4,7 @@ import chatService from '../../../services/chatService';
 
 import './Dictaphone.css';
 
-const Dictaphone = ({ messages, setMessages, setMessageSent, setTranscript, setRecordingStarted }) => {
+const Dictaphone = ({ messages, setMessages, setMessageSent, setTranscript, setRecordingStarted, textToSpeech }) => {
     const {
         transcript,
         resetTranscript,
@@ -35,15 +35,17 @@ const Dictaphone = ({ messages, setMessages, setMessageSent, setTranscript, setR
                 if (currentText == textTranscript && currentText != '') {
                     chatService.sendText(currentText)
                         .then(res => {
+                            textToSpeech(res.response);
                             const prevMessages = messages.reverse();
                             const curMessages = [currentText, res.response].reverse();
+
                             setMessages([...curMessages, ...prevMessages]);
                             resetTranscript();
                             setMessageSent(true);
 
                             setTimeout(() => {
                                 startListening();
-                            }, 3500);
+                            }, 5500);
                         })
                         .catch(err => {
                             console.log(err);

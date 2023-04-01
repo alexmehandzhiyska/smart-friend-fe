@@ -115,10 +115,9 @@ const Home = () => {
                     {messages.map(message => <h3 className="sent-message">{message}</h3>)}
                 </section>
             </article>
-           
 
             <article className="send-message">
-                <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} setTranscript={setTranscript} setRecordingStarted={setRecordingStarted} />
+                <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} setTranscript={setTranscript} setRecordingStarted={setRecordingStarted} textToSpeech={textToSpeech} />
 
                 <div className="message-prompt">
                     <input ref={messageRef} type="text" name="message" id="message" placeholder="Message"  onClick={handleImageClick}/>
