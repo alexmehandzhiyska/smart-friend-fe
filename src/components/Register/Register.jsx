@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
-import { authService } from "../../services/authService";
-import { useForm } from "react-hook-form";
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
-import "./Register.css";
+import authService from '../../services/authService';
+
+import './Register.css';
 
 const Register = () => {
   const {
