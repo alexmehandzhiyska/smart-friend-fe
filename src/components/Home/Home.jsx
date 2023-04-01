@@ -8,30 +8,30 @@ import chatService from '../../services/chatService';
 import './Home.css';
 
 const Home = () => {
-    const [reply, setReply] = useState('');
-    const [initialReqSent, setInitialReqSent] = useState(false);
+    const [messages, setMessages] = useState([]);
+    const [messageSent, setMessageSent] = useState(false);
     const messageRef = useRef(null);
 
-    // useEffect(() => {
-    //     if (!initialReqSent) {
-    //         chatService.sendText('')
-    //         .then(res => {
-    //             setReply(res.response);
-    //             setInitialReqSent(true);
-    //         })
-    //         .catch(err => {
-    //             console.log(err);
-    //         });
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (!messageSent) {
+            chatService.sendText('')
+            .then(res => {
+                setMessages([res.response]);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+    }, [messageSent]);
 
     const sendMessage = () => {
         const message = messageRef.current.value;
         messageRef.current.value = '';
+        setMessages([...messages, message]);
 
         chatService.sendText(message)
             .then((res) => {
-                setReply(res.response);
+                setMessages([...messages, message, res.response]);
             })
             .catch((err) => {
                 console.log(err);
@@ -41,11 +41,11 @@ const Home = () => {
     return (
         <section className="home-page">
             <article className="chat">
-                {reply && <h1>{reply}</h1>}
+                {messages.map(message => <h3 class="sent-message">{message}</h3>)}
             </article>
 
             <article className="send-message">
-                <Dictaphone setReply={setReply} />
+                <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} />
 
                 <div className="message-prompt">
                     <input ref={messageRef} type="text" name="message" id="message" placeholder="Message" />

@@ -1,6 +1,6 @@
 .home-page {
     display: flex;
-    padding: 7em 0;
+    padding: 7em 0 1em 0;
     flex-direction: column;
     justify-content: space-between;
     min-height: 80vh;
@@ -18,6 +18,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    padding: 0 5em;
 }
 
 .message-prompt {
@@ -38,4 +39,11 @@
     font-size: 1.25rem;
     right: 20px;
     color: var(--green);
+}
+
+.sent-message:nth-child(even) {
+    max-width: 100%;
+    width: 100%;
+    background: lightblue;
+    text-align: right;
 }

@@ -4,12 +4,10 @@ import chatService from '../../../services/chatService';
 
 import './Dictaphone.css';
 
-const Dictaphone = ({ setReply }) => {
+const Dictaphone = ({ messages, setMessages, setMessageSent }) => {
     const {
         transcript,
-        listening,
         resetTranscript,
-        browserSupportsSpeechRecognition
     } = useSpeechRecognition();
 
     const [textTranscript, setTextTranscript] = useState('');
@@ -28,12 +26,13 @@ const Dictaphone = ({ setReply }) => {
         const intervalId = setInterval(() => {
             if (transcriptRef.current) {
                 const currentText = transcriptRef.current.textContent;
-
+                
                 if (currentText == textTranscript && currentText != '') {
                     chatService.sendText(currentText)
                         .then(res => {
-                            setReply(res.response);
-                            console.log(res);
+                            setMessages([...messages, currentText, res.response]);
+                            resetTranscript();
+                            setMessageSent(true);
                         })
                         .catch(err => {
                             console.log(err);
@@ -49,7 +48,6 @@ const Dictaphone = ({ setReply }) => {
 
     return (
         <div className="dictaphone">
-            {/* <p>Microphone: {listening ? 'on' : 'off'}</p> */}
             <button  onClick={startListening} className="primary-btn">Begin conversation</button>
             <p ref={transcriptRef} onChange={() => setTextTranscript('hi')}>{transcript}</p>
             <p>or</p>
