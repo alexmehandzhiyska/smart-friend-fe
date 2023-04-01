@@ -42,8 +42,14 @@
 
 .avatar img{
     width: 250px;
-    margin: auto;
 }
-.avatar{
-    width: 100%;
+
+@media screen and (max-width: 768px) {
+    .message-prompt{
+        max-width: 100%;
+    }
+    #message{
+        width: 85vw;
+        margin: 23px 0px;
+    }
 }
