@@ -1,23 +1,10 @@
-.login form input {
-    position: relative;
-    z-index: 0;
-    background: transparent;
-    padding: 2px 5px;
-    border: 1px solid #999;
-    margin: 0;
-  }
-  label {
-    position: relative;
-    top: -60px;
-    left: 5px;
-    font-size: 18px;
-    transition: all 0.3s ease-in-out;
-    z-index: 1;
-  }
-  
-  input:focus + label {
-    top: -85px;
-    font-size: 14px;
-    color: var(--green);
-    background-color: var(--white);
-  }
+.content-wrapper form {
+  display: flex;
+  flex-direction: column;
+}
+h1{
+  text-align: center;
+}
+.Mui-focused{
+  border-color: var(--green);
+}
