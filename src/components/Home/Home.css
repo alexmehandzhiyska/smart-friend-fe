@@ -39,3 +39,7 @@
     right: 20px;
     color: var(--green);
 }
+
+.avatar img{
+    width: 250px;
+}
