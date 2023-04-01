@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { authService } from '../../services/authService';
+import authService from '../../services/authService';
 import { useForm } from 'react-hook-form';
+import { TextField } from '@mui/material';
+
+import './Login.css'
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -10,24 +13,22 @@ const Login = () => {
         authService.login(data)
             .then(res => {
                 localStorage.setItem('user', JSON.stringify(res));
-                console.log(res);
-                // navigate('/');
+                navigate('/');
             })
             .catch(err => {
                 console.log(err);
             })
-    }
-    
+    };
+
     return (
-        <section>
+        <section className="content-wrapper">
             <form method="POST" onSubmit={handleSubmit(loginUser)}>
-                <label htmlFor="email">Email</label>
-                <input type="email" id="email" name="email" {...register('email')} />
 
-                <label htmlFor="password">Password</label>
-                <input type="password" id="password" name="password" {...register('password')} />
+                <h1>Welcome back</h1>
+                <TextField type="username" id="username" name="username" {...register('username')} label="Username" variant="outlined" sx={{my: 2}} color="success" ></TextField>
+                <TextField type="password" id="password" name="password" {...register('password')} label='Password' variant="outlined" sx={{my: 2}} color="success"></TextField>
 
-                <input type="submit" value="Submit" />
+                <input type="submit" value="Submit" className="submit primary-btn"/>
             </form>
         </section>
     );
