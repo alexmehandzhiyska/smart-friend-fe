@@ -33,6 +33,10 @@ const Dictaphone = ({ messages, setMessages, setMessageSent }) => {
                             setMessages([...messages, currentText, res.response]);
                             resetTranscript();
                             setMessageSent(true);
+
+                            setTimeout(() => {
+                                startListening();
+                            }, 3500);
                         })
                         .catch(err => {
                             console.log(err);
@@ -43,13 +47,13 @@ const Dictaphone = ({ messages, setMessages, setMessageSent }) => {
     
                 setTextTranscript(currentText);
             }
-        }, 2000);
+        }, 1000);
     }, [textTranscript]);
 
     return (
         <div className="dictaphone">
             <button  onClick={startListening} className="primary-btn">Begin conversation</button>
-            <p ref={transcriptRef} onChange={() => setTextTranscript('hi')}>{transcript}</p>
+            <p ref={transcriptRef} onChange={() => setTextTranscript('hi')} className="transcript-ref">{transcript}</p>
             <p>or</p>
         </div>
     );

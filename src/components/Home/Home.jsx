@@ -28,15 +28,6 @@ const Home = () => {
             });
         }
     }, [messageSent]);
-
-    /*useEffect(() => {
-        const timeout = setTimeout(() => {
-          setPreviousImageSrc(imageSrc);
-          setImageSrc(previousImageSrc);
-        }, 5000);
-    
-        return () => clearTimeout(timeout);
-      }, [imageSrc, previousImageSrc]);*/
     
       const handleImageClick = () => {
         
@@ -68,9 +59,10 @@ const Home = () => {
                 {messages.map(message => <h3 class="sent-message">{message}</h3>)}
             </article>
 
-<article className="avatar">
-<img src={imageSrc} onClick={handleImageClick} alt=''/>
-</article>
+            <article className="avatar">
+                <img src={imageSrc} onClick={handleImageClick} alt=''/>
+            </article>
+            
             <article className="send-message">
                 <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} />
 
