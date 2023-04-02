@@ -36,10 +36,7 @@ const Dictaphone = ({ messages, setMessages, setMessageSent, setTranscript, setR
                     chatService.sendText(currentText)
                         .then(res => {
                             textToSpeech(res.response);
-                            const prevMessages = messages.reverse();
-                            const curMessages = [currentText, res.response].reverse();
-
-                            setMessages([...curMessages, ...prevMessages]);
+                            setMessages([...messages, currentText, res.response]);
                             resetTranscript();
                             setMessageSent(true);
 
@@ -52,9 +49,9 @@ const Dictaphone = ({ messages, setMessages, setMessageSent, setTranscript, setR
                         });
                     SpeechRecognition.stopListening();
                     clearInterval(intervalId)
+                } else {
+                    setTextTranscript(currentText);
                 }
-    
-                setTextTranscript(currentText);
             }
         }, 3000);
     }, [textTranscript]);
