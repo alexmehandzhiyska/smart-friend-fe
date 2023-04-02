@@ -5,9 +5,7 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import chatService from '../../services/chatService';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
-
 import './Home.css';
-
 
 const Home = () => {
     const [imageSrc, setImageSrc] = useState('avatar_green_normal.png');
@@ -18,6 +16,8 @@ const Home = () => {
     const [beginBtnDisplay, setBeginBtnDisplay] = useState('block');
     const [inputFieldDisplay, setInputFieldDisplay] = useState('block');
     const [messageSent, setMessageSent] = useState(false);
+    const [textTranscript, setTextTranscript] = useState('');
+    const [micOn, setMicOn] = useState(false);
     const messageRef = useRef(null);
     const transcriptRef = useRef(<p></p>);
     
@@ -29,6 +29,8 @@ const Home = () => {
     const startListening = () => {
         setBeginBtnDisplay('none');
         setInputFieldDisplay('none');
+
+        setMicOn(true);
 
         SpeechRecognition.startListening({
             continuous: true,
@@ -57,20 +59,8 @@ const Home = () => {
                 const currentText = transcriptRef.current.textContent;
                 
                 if (currentText == textTranscript && currentText != '') {
-                    chatService.sendText(currentText)
-                        .then(res => {
-                            textToSpeech(res.response);
-                            setMessages([...messages, currentText, res.response]);
-                            resetTranscript();
-                            setMessageSent(true);
-
-                            setTimeout(() => {
-                                startListening();
-                            }, 5500);
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                    resetTranscript();
+                    sendMessage(currentText);
                     SpeechRecognition.stopListening();
                     clearInterval(intervalId)
                 } else {
@@ -98,19 +88,17 @@ const Home = () => {
         utterance.voice = voice;
     }
 
+    speechSynthesis.onvoiceschanged = () => {
+        setVoicesLoaded(true);
+    };
+
     const textToSpeech = (text) => {
         const utterance = new SpeechSynthesisUtterance(text);
-
-        if (voicesLoaded) {
-            setVoices(utterance);
-            speechSynthesis.speak(utterance);
-        }
-
-        speechSynthesis.onvoiceschanged = () => {
-            setVoices(utterance);
-            speechSynthesis.speak(utterance);
-            setVoicesLoaded(true);
-        };
+        utterance.lang = 'en-GB';
+        
+        setVoices(utterance);
+        console.log(utterance);
+        speechSynthesis.speak(utterance);
     
         utterance.onboundary = (event) => {
             let startTime, endTime;
@@ -124,35 +112,61 @@ const Home = () => {
             }
     
             utterance.onend = () => {
+                console.log('in');
+                console.log(endTime);
+                console.log(startTime);
                 setDuration(endTime - startTime);
             };
         };
     }
 
-    const sendMessage = () => {
+    const sendMessage = (text) => {
         setBeginBtnDisplay('none');
+        setMicOn(false);
+        let message;
 
-        const message = messageRef.current.value;
-        messageRef.current.value = '';
+        if (!text) {
+            message = messageRef.current.value;
+            messageRef.current.value = '';
+        } else {
+            message = text;
+        }
+
         setMessages([...messages, message]);
 
         chatService.sendText(message)
             .then((res) => {
+                console.log(res);
+                console.log(micOn);
                 textToSpeech(res.response);
                 setImageSrc(previousImageSrc);
                 setPreviousImageSrc(imageSrc);
                 setMessages([...messages, message, res.response]);
+                setMessageSent(true);
+                console.log('in sendText');
 
                 setTimeout(() => {
-                    setDuration(0);
+                    setDuration(5000);
+                    setMicOn(true);
                     setPreviousImageSrc(previousImageSrc);
                     setImageSrc(imageSrc);
-                }, duration)
+
+                }, 5000)
             })
             .catch((err) => {
                 console.log(err);
             });
     };
+
+    useEffect(() => {
+        console.log('in use effect' + micOn);
+        if (micOn) {
+            startListening();
+        } else {
+            console.log('in else');
+            SpeechRecognition.stopListening();
+        }
+    }, [micOn]);
 
     return (
         <section className="home-page">
@@ -165,6 +179,7 @@ const Home = () => {
 
                 <section className="chat">
                     {messages.map((item, index) => {
+                        console.log(item);
                         const className = index % 2 === 0 ? "system" : "user";
                         const flexPos = index % 2 === 0 ? "flex-start" : "flex-end"
                         
@@ -184,13 +199,12 @@ const Home = () => {
                 <div style={{display: beginBtnDisplay}} className="dictaphone">
                     <button  onClick={startListening} className="primary-btn">Begin conversation</button>
                     <p ref={transcriptRef} className="transcript-ref">{transcript}</p>
-                    <p>or</p>
+                    <p style={{textAlign: "center"}}>or</p>
                 </div>
-                {/* <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} setTranscript={setTranscript} setRecordingStarted={setRecordingStarted} textToSpeech={textToSpeech} /> */}
 
                 <div className="message-prompt" style={{display: inputFieldDisplay}}>
-                    <input ref={messageRef} type="text" name="message" id="message" placeholder="Message" onClick={handleImageClick} />
-                    <FontAwesomeIcon onClick={sendMessage} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
+                    <input ref={messageRef} type="text" name="message" id="message" placeholder="Message" />
+                    <FontAwesomeIcon onClick={() => sendMessage()} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
                 </div>
             </article>
         </section >
