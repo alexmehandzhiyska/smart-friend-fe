@@ -7,13 +7,10 @@ import chatService from '../../services/chatService';
 
 import './Home.css';
 
-import image1 from '../../assets/avatar_green_normal.png';
-import image2 from '../../assets/avatar_green_talk.png';
-
 
 const Home = () => {
-    const [imageSrc, setImageSrc] = useState(image1);
-    const [previousImageSrc, setPreviousImageSrc] = useState(image2);
+    const [imageSrc, setImageSrc] = useState('avatar_green_normal.png');
+    const [previousImageSrc, setPreviousImageSrc] = useState('talking_avatar.gif');
     const [duration, setDuration] = useState(0);
     const [messages, setMessages] = useState([]);
     const [voicesLoaded, setVoicesLoaded] = useState(false);
@@ -36,16 +33,6 @@ const Home = () => {
             });
         }
     }, [messageSent]);
-    
-    const handleImageClick = () => {
-        setImageSrc(previousImageSrc);
-        setPreviousImageSrc(imageSrc);
-
-        setTimeout(() => {
-            setPreviousImageSrc(previousImageSrc);
-            setImageSrc(imageSrc);
-          }, 5000);
-    };
 
     const setVoices = (utterance) => {
         const voice = speechSynthesis.getVoices().find(
@@ -88,6 +75,7 @@ const Home = () => {
 
     const sendMessage = () => {
         setBeginBtnDisplay('none');
+
         const message = messageRef.current.value;
         messageRef.current.value = '';
         setMessages([...messages, message]);
@@ -95,10 +83,14 @@ const Home = () => {
         chatService.sendText(message)
             .then((res) => {
                 textToSpeech(res.response);
+                setImageSrc(previousImageSrc);
+                setPreviousImageSrc(imageSrc);
                 setMessages([...messages, message, res.response]);
 
                 setTimeout(() => {
                     setDuration(0);
+                    setPreviousImageSrc(previousImageSrc);
+                    setImageSrc(imageSrc);
                 }, duration)
             })
             .catch((err) => {
@@ -111,7 +103,7 @@ const Home = () => {
             <article className="main-content">
                 <section className="avatar">
                     <div className="imageHolder">
-                        <img src={imageSrc} onClick={handleImageClick} alt=''/>
+                        <img src={imageSrc} alt=''/>
                     </div>
                 </section>
 
@@ -139,7 +131,7 @@ const Home = () => {
                 </div>
  
                 <div style={{display: inputFieldDisplay}} className="message-prompt">
-                    <input ref={messageRef} type="text" name="message" id="message" placeholder="Message"  onClick={handleImageClick}/>
+                    <input ref={messageRef} type="text" name="message" id="message" placeholder="Message" />
                     <FontAwesomeIcon onClick={sendMessage} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
                 </div>
             </article>
