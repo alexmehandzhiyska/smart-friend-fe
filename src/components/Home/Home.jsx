@@ -30,6 +30,9 @@ const Home = () => {
     } = useSpeechRecognition();
 
     const startListening = () => {
+        setBeginBtnDisplay('none');
+        setInputFieldDisplay('none');
+
         SpeechRecognition.startListening({
             continuous: true,
             interimResults: false,
@@ -154,11 +157,6 @@ const Home = () => {
             });
     };
 
-    // const updateTranscript = () => {
-        // setTranscript(transcript);
-        // setRecordingStarted(true);
-    // }
-
     return (
         <section className="home-page">
             <article className="main-content">
@@ -186,7 +184,7 @@ const Home = () => {
             </article>
 
             <article className="send-message">
-                <div className="dictaphone" setBeginBtnDisplay={setBeginBtnDisplay} setInputFieldDisplay={setInputFieldDisplay}>
+                <div style={{display: beginBtnDisplay}} className="dictaphone">
                     <button  onClick={startListening} className="primary-btn">Begin conversation</button>
                     <p ref={transcriptRef} className="transcript-ref">{transcript}</p>
                     <p>or</p>
