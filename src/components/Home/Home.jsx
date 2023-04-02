@@ -110,9 +110,22 @@ const Home = () => {
                     <img src={imageSrc} onClick={handleImageClick} alt=''/>
                 </section>
 
-                <section className="chat">
-                    {recordingStarted && <h3 className="sent-message">{transcript}</h3>}
-                    {messages.map(message => <h3 className="sent-message">{message}</h3>)}
+                <section className="chat-wrapper">
+                    <div className="chat">
+                        {recordingStarted && <h3 className="sent-message">{transcript}</h3>}
+                        {messages.map((item, index) => {
+                            const className = index % 2 === 0 ? "system" : "user";
+                            const flexPos = index % 2 === 0 ? "flex-start" : "flex-end"
+                            
+                            return (
+                                <div key={index} style={{display: "flex", justifyContent: flexPos, width: "100%"}}>
+                                    <li className={className}>
+                                        <p className="sent-message">{item}</p>
+                                    </li>
+                                </div>
+                            )
+                        })}
+                    </div>
                 </section>
             </article>
 
