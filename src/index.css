@@ -35,7 +35,7 @@ main {
 
 .title {
   font-size: 1.75rem;
-  color: var(--green);
+  color: black;
   text-transform: uppercase;
 }
 
@@ -69,6 +69,10 @@ form input {
   flex-direction: column;
   justify-content: space-between;
   min-height: 100vh;
+}
+
+a {
+  color: black;
 }
 
 @media screen and (max-width: 768px) {
