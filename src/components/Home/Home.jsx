@@ -19,8 +19,8 @@ const Home = () => {
     const [beginBtnDisplay, setBeginBtnDisplay] = useState('block');
     const [inputFieldDisplay, setInputFieldDisplay] = useState('block');
     const [messageSent, setMessageSent] = useState(false);
-    const [recordingStarted, setRecordingStarted] = useState(false);
     const [textTranscript, setTextTranscript] = useState('');
+    const [micOn, setMicOn] = useState(false);
     const messageRef = useRef(null);
     const transcriptRef = useRef(<p></p>);
     
@@ -33,16 +33,19 @@ const Home = () => {
         setBeginBtnDisplay('none');
         setInputFieldDisplay('none');
 
-        SpeechRecognition.startListening({
-            continuous: true,
-            interimResults: false,
-            maxSpeechTime: 500000,
-            language: 'en-US',
-        });
+        if (micOn) {
+            SpeechRecognition.startListening({
+                continuous: true,
+                interimResults: false,
+                maxSpeechTime: 500000,
+                language: 'en-US',
+            });
+        }
     };
 
     useEffect(() => {
         if (!messageSent) {
+            setMicOn(true);
             chatService.sendText('')
             .then(res => {
                 textToSpeech(res.response);
@@ -62,14 +65,15 @@ const Home = () => {
                 if (currentText == textTranscript && currentText != '') {
                     chatService.sendText(currentText)
                         .then(res => {
+                            console.log(res);
                             textToSpeech(res.response);
                             setMessages([...messages, currentText, res.response]);
                             resetTranscript();
                             setMessageSent(true);
 
-                            setTimeout(() => {
-                                startListening();
-                            }, 5500);
+                            // setTimeout(() => {
+                            //     startListening();
+                            // }, 5500);
                         })
                         .catch(err => {
                             console.log(err);
@@ -111,6 +115,7 @@ const Home = () => {
 
         speechSynthesis.onvoiceschanged = () => {
             setVoices(utterance);
+            console.log(utterance);
             speechSynthesis.speak(utterance);
             setVoicesLoaded(true);
         };
@@ -149,8 +154,10 @@ const Home = () => {
 
                 setTimeout(() => {
                     setDuration(0);
+                    setMicOn(true);
                     setPreviousImageSrc(previousImageSrc);
                     setImageSrc(imageSrc);
+
                 }, duration)
             })
             .catch((err) => {
@@ -169,6 +176,7 @@ const Home = () => {
 
                 <section className="chat">
                     {messages.map((item, index) => {
+                        console.log('');
                         const className = index % 2 === 0 ? "system" : "user";
                         const flexPos = index % 2 === 0 ? "flex-start" : "flex-end"
                         
@@ -188,7 +196,7 @@ const Home = () => {
                 <div style={{display: beginBtnDisplay}} className="dictaphone">
                     <button  onClick={startListening} className="primary-btn">Begin conversation</button>
                     <p ref={transcriptRef} className="transcript-ref">{transcript}</p>
-                    <p>or</p>
+                    <p style={{textAlign: "center"}}>or</p>
                 </div>
                 {/* <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} setTranscript={setTranscript} setRecordingStarted={setRecordingStarted} textToSpeech={textToSpeech} /> */}
 
