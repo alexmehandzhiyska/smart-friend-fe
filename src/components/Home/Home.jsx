@@ -4,6 +4,8 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 import Dictaphone from './Dictaphone/Dictaphone';
 import chatService from '../../services/chatService';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+
 
 import './Home.css';
 
@@ -19,8 +21,23 @@ const Home = () => {
     const [voicesLoaded, setVoicesLoaded] = useState(false);
     const [messageSent, setMessageSent] = useState(false);
     const [recordingStarted, setRecordingStarted] = useState(false);
-    const [transcript, setTranscript] = useState('');
+    const [textTranscript, setTextTranscript] = useState('');
     const messageRef = useRef(null);
+    const transcriptRef = useRef(<p></p>);
+    
+    const {
+        transcript,
+        resetTranscript,
+    } = useSpeechRecognition();
+
+    const startListening = () => {
+        SpeechRecognition.startListening({
+            continuous: true,
+            interimResults: false,
+            maxSpeechTime: 500000,
+            language: 'en-US',
+        });
+    };
 
     useEffect(() => {
         if (!messageSent) {
@@ -34,6 +51,35 @@ const Home = () => {
             });
         }
     }, [messageSent]);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            if (transcriptRef.current) {
+                const currentText = transcriptRef.current.textContent;
+                
+                if (currentText == textTranscript && currentText != '') {
+                    chatService.sendText(currentText)
+                        .then(res => {
+                            textToSpeech(res.response);
+                            setMessages([...messages, currentText, res.response]);
+                            resetTranscript();
+                            setMessageSent(true);
+
+                            setTimeout(() => {
+                                startListening();
+                            }, 5500);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                    SpeechRecognition.stopListening();
+                    clearInterval(intervalId)
+                } else {
+                    setTextTranscript(currentText);
+                }
+            }
+        }, 3000);
+    }, [textTranscript]);
     
     const handleImageClick = () => {
         setImageSrc(previousImageSrc);
@@ -101,7 +147,12 @@ const Home = () => {
             .catch((err) => {
                 console.log(err);
             });
-    }
+    };
+
+    // const updateTranscript = () => {
+        // setTranscript(transcript);
+        // setRecordingStarted(true);
+    // }
 
     return (
         <section className="home-page">
@@ -123,16 +174,20 @@ const Home = () => {
                             </div>
                         )
                     })}
-                    {recordingStarted && transcript && <div style={{display: "flex", justifyContent: "flex-end", width: "100%"}}><li className="user"> <p className="sent-message">{transcript}</p></li></div>}
-
+                    {transcript && <div style={{display: "flex", justifyContent: "flex-end", width: "100%"}}><li className="user"> <p className="sent-message">{transcript}</p></li></div>}
                 </section>
             </article>
 
             <article className="send-message">
-                <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} setTranscript={setTranscript} setRecordingStarted={setRecordingStarted} textToSpeech={textToSpeech} />
+                <div className="dictaphone">
+                    <button  onClick={startListening} className="primary-btn">Begin conversation</button>
+                    <p ref={transcriptRef} className="transcript-ref">{transcript}</p>
+                    <p>or</p>
+                </div>
+                {/* <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} setTranscript={setTranscript} setRecordingStarted={setRecordingStarted} textToSpeech={textToSpeech} /> */}
 
                 <div className="message-prompt">
-                    <input ref={messageRef} type="text" name="message" id="message" placeholder="Message"  onClick={handleImageClick}/>
+                    <input ref={messageRef} type="text" name="message" id="message" placeholder="Message" />
                     <FontAwesomeIcon onClick={sendMessage} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
                 </div>
             </article>
