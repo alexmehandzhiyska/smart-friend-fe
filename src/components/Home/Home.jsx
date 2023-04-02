@@ -59,9 +59,9 @@ const Home = () => {
                 const currentText = transcriptRef.current.textContent;
                 
                 if (currentText == textTranscript && currentText != '') {
+                    SpeechRecognition.stopListening();
                     resetTranscript();
                     sendMessage(currentText);
-                    SpeechRecognition.stopListening();
                     clearInterval(intervalId)
                 } else {
                     setTextTranscript(currentText);
@@ -147,7 +147,7 @@ const Home = () => {
 
                 setTimeout(() => {
                     setDuration(5000);
-                    setMicOn(true);
+                    startListening();
                     setPreviousImageSrc(previousImageSrc);
                     setImageSrc(imageSrc);
 
@@ -158,15 +158,15 @@ const Home = () => {
             });
     };
 
-    useEffect(() => {
-        console.log('in use effect' + micOn);
-        if (micOn) {
-            startListening();
-        } else {
-            console.log('in else');
-            SpeechRecognition.stopListening();
-        }
-    }, [micOn]);
+    // useEffect(() => {
+    //     console.log('in use effect' + micOn);
+    //     if (micOn) {
+    //         startListening();
+    //     } else {
+    //         console.log('in else');
+    //         SpeechRecognition.stopListening();
+    //     }
+    // }, [micOn]);
 
     return (
         <section className="home-page">
