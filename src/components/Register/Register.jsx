@@ -42,8 +42,8 @@ const Register = () => {
 
           <form method="POST" onSubmit={handleSubmit(registerUser)}>
             <TextField type="text" id="username" name="username" {...register("username")} label="Username" variant="outlined" sx={{my: 2}} color="success"></TextField>
-            <TextField type="email" id="email" name="email" {...register("email")} label="Username" variant="outlined" sx={{my: 2}} color="success"></TextField>
-            <TextField type="password" id="password" name="password" placeholder="Password"{...register("password")} label="Username" variant="outlined" sx={{my: 2}} color="success"></TextField>
+            <TextField type="email" id="email" name="email" {...register("email")} label="Email" variant="outlined" sx={{my: 2}} color="success"></TextField>
+            <TextField type="password" id="password" name="password" {...register("password")} label="Password" variant="outlined" sx={{my: 2}} color="success"></TextField>
 
             <p>Already have an account? <Link to="/login">Log in here</Link></p>
             <input type="submit" value="Submit" className="submit primary-btn" />
