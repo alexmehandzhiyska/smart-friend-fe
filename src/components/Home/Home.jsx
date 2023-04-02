@@ -9,13 +9,10 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 
 import './Home.css';
 
-import image1 from '../../assets/avatar_green_normal.png';
-import image2 from '../../assets/avatar_green_talk.png';
-
 
 const Home = () => {
-    const [imageSrc, setImageSrc] = useState(image1);
-    const [previousImageSrc, setPreviousImageSrc] = useState(image2);
+    const [imageSrc, setImageSrc] = useState('avatar_green_normal.png');
+    const [previousImageSrc, setPreviousImageSrc] = useState('talking_avatar.gif');
     const [duration, setDuration] = useState(0);
     const [messages, setMessages] = useState([]);
     const [voicesLoaded, setVoicesLoaded] = useState(false);
@@ -33,6 +30,9 @@ const Home = () => {
     } = useSpeechRecognition();
 
     const startListening = () => {
+        setBeginBtnDisplay('none');
+        setInputFieldDisplay('none');
+
         SpeechRecognition.startListening({
             continuous: true,
             interimResults: false,
@@ -134,6 +134,7 @@ const Home = () => {
 
     const sendMessage = () => {
         setBeginBtnDisplay('none');
+
         const message = messageRef.current.value;
         messageRef.current.value = '';
         setMessages([...messages, message]);
@@ -142,10 +143,14 @@ const Home = () => {
             .then((res) => {
                 console.log(res);
                 textToSpeech(res.response);
+                setImageSrc(previousImageSrc);
+                setPreviousImageSrc(imageSrc);
                 setMessages([...messages, message, res.response]);
 
                 setTimeout(() => {
                     setDuration(0);
+                    setPreviousImageSrc(previousImageSrc);
+                    setImageSrc(imageSrc);
                 }, duration)
             })
             .catch((err) => {
@@ -158,7 +163,7 @@ const Home = () => {
             <article className="main-content">
                 <section className="avatar">
                     <div className="imageHolder">
-                        <img src={imageSrc} onClick={handleImageClick} alt=''/>
+                        <img src={imageSrc} alt=''/>
                     </div>
                 </section>
 
@@ -180,7 +185,7 @@ const Home = () => {
             </article>
 
             <article className="send-message">
-                <div className="dictaphone" setBeginBtnDisplay={setBeginBtnDisplay} setInputFieldDisplay={setInputFieldDisplay}>
+                <div style={{display: beginBtnDisplay}} className="dictaphone">
                     <button  onClick={startListening} className="primary-btn">Begin conversation</button>
                     <p ref={transcriptRef} className="transcript-ref">{transcript}</p>
                     <p>or</p>
