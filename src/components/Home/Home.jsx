@@ -6,9 +6,7 @@ import Dictaphone from './Dictaphone/Dictaphone';
 import chatService from '../../services/chatService';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
-
 import './Home.css';
-
 
 const Home = () => {
     const [imageSrc, setImageSrc] = useState('avatar_green_normal.png');
@@ -33,19 +31,24 @@ const Home = () => {
         setBeginBtnDisplay('none');
         setInputFieldDisplay('none');
 
-        if (micOn) {
-            SpeechRecognition.startListening({
-                continuous: true,
-                interimResults: false,
-                maxSpeechTime: 500000,
-                language: 'en-US',
-            });
-        }
+        setMicOn(true);
+
+        SpeechRecognition.startListening({
+            continuous: true,
+            interimResults: false,
+            maxSpeechTime: 500000,
+            language: 'en-US',
+        });
     };
 
     useEffect(() => {
+        if (micOn) {
+            startListening();
+        }
+    }, [micOn]);
+
+    useEffect(() => {
         if (!messageSent) {
-            setMicOn(true);
             chatService.sendText('')
             .then(res => {
                 textToSpeech(res.response);
@@ -63,21 +66,22 @@ const Home = () => {
                 const currentText = transcriptRef.current.textContent;
                 
                 if (currentText == textTranscript && currentText != '') {
-                    chatService.sendText(currentText)
-                        .then(res => {
-                            console.log(res);
-                            textToSpeech(res.response);
-                            setMessages([...messages, currentText, res.response]);
-                            resetTranscript();
-                            setMessageSent(true);
+                    resetTranscript();
+                    sendMessage(currentText);
+                    // chatService.sendText(currentText)
+                    //     .then(res => {
+                    //         console.log(res);
+                    //         textToSpeech(res.response);
+                    //         setMessages([...messages, currentText, res.response]);
+                    //         setMessageSent(true);
 
-                            // setTimeout(() => {
-                            //     startListening();
-                            // }, 5500);
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                    //         // setTimeout(() => {
+                    //         //     startListening();
+                    //         // }, 5500);
+                    //     })
+                    //     .catch(err => {
+                    //         console.log(err);
+                    //     });
                     SpeechRecognition.stopListening();
                     clearInterval(intervalId)
                 } else {
@@ -105,20 +109,28 @@ const Home = () => {
         utterance.voice = voice;
     }
 
+    speechSynthesis.onvoiceschanged = () => {
+        setVoicesLoaded(true);
+    };
+
     const textToSpeech = (text) => {
         const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-GB';
+        
+        setVoices(utterance);
+        console.log(utterance);
+        speechSynthesis.speak(utterance);
 
-        if (voicesLoaded) {
-            setVoices(utterance);
-            speechSynthesis.speak(utterance);
-        }
-
-        speechSynthesis.onvoiceschanged = () => {
-            setVoices(utterance);
-            console.log(utterance);
-            speechSynthesis.speak(utterance);
-            setVoicesLoaded(true);
-        };
+        // speechSynthesis.onvoiceschanged = () => {
+        //     const voice = speechSynthesis.getVoices().find(
+        //         (v) => v.lang === 'en-GB' && v.name.includes('Female')
+        //     );
+    
+        //     utterance.voice = voice;
+        //     console.log(utterance);
+        //     speechSynthesis.speak(utterance);
+        //     setVoicesLoaded(true);
+        // };
     
         utterance.onboundary = (event) => {
             let startTime, endTime;
@@ -132,16 +144,26 @@ const Home = () => {
             }
     
             utterance.onend = () => {
+                console.log('in');
+                console.log(endTime);
+                console.log(startTime);
                 setDuration(endTime - startTime);
             };
         };
     }
 
-    const sendMessage = () => {
+    const sendMessage = (text) => {
         setBeginBtnDisplay('none');
+        setMicOn(false);
+        let message;
 
-        const message = messageRef.current.value;
-        messageRef.current.value = '';
+        if (!text) {
+            message = messageRef.current.value;
+            messageRef.current.value = '';
+        } else {
+            message = text;
+        }
+
         setMessages([...messages, message]);
 
         chatService.sendText(message)
@@ -151,6 +173,7 @@ const Home = () => {
                 setImageSrc(previousImageSrc);
                 setPreviousImageSrc(imageSrc);
                 setMessages([...messages, message, res.response]);
+                setMessageSent(true);
 
                 setTimeout(() => {
                     setDuration(0);
@@ -176,7 +199,7 @@ const Home = () => {
 
                 <section className="chat">
                     {messages.map((item, index) => {
-                        console.log('');
+                        console.log(item);
                         const className = index % 2 === 0 ? "system" : "user";
                         const flexPos = index % 2 === 0 ? "flex-start" : "flex-end"
                         
@@ -198,11 +221,10 @@ const Home = () => {
                     <p ref={transcriptRef} className="transcript-ref">{transcript}</p>
                     <p style={{textAlign: "center"}}>or</p>
                 </div>
-                {/* <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} setTranscript={setTranscript} setRecordingStarted={setRecordingStarted} textToSpeech={textToSpeech} /> */}
 
                 <div className="message-prompt" style={{display: inputFieldDisplay}}>
                     <input ref={messageRef} type="text" name="message" id="message" placeholder="Message" onClick={handleImageClick} />
-                    <FontAwesomeIcon onClick={sendMessage} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
+                    <FontAwesomeIcon onClick={() => sendMessage()} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
                 </div>
             </article>
         </section >
