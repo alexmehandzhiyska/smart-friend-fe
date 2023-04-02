@@ -110,22 +110,20 @@ const Home = () => {
                     <img src={imageSrc} onClick={handleImageClick} alt=''/>
                 </section>
 
-                <section className="chat-wrapper">
-                    <div className="chat">
-                        {recordingStarted && transcript && <div style={{display: "flex", justifyContent: "flex-end", width: "100%"}}><li className="user"> <p className="sent-message">{transcript}</p></li></div>}
-                        {messages.map((item, index) => {
-                            const className = index % 2 === 0 ? "system" : "user";
-                            const flexPos = index % 2 === 0 ? "flex-start" : "flex-end"
-                            
-                            return (
-                                <div key={index} style={{display: "flex", justifyContent: flexPos, width: "100%"}}>
-                                    <li className={className}>
-                                        <p className="sent-message">{item}</p>
-                                    </li>
-                                </div>
-                            )
-                        })}
-                    </div>
+                <section className="chat">
+                    {recordingStarted && transcript && <div style={{display: "flex", justifyContent: "flex-end", width: "100%"}}><li className="user"> <p className="sent-message">{transcript}</p></li></div>}
+                    {messages.map((item, index) => {
+                        const className = index % 2 === 0 ? "system" : "user";
+                        const flexPos = index % 2 === 0 ? "flex-start" : "flex-end"
+                        
+                        return (
+                            <div key={index} style={{display: "flex", justifyContent: flexPos, width: "100%"}}>
+                                <li className={className}>
+                                    <p className="sent-message">{item}</p>
+                                </li>
+                            </div>
+                        )
+                    })}
                 </section>
             </article>
 

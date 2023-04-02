@@ -3,7 +3,6 @@
     padding: 7em 0 1em 0;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 80vh;
     max-width: 100vw;
 }
 
@@ -14,14 +13,9 @@
     align-items: center;
 }
 
-.chat-wrapper {
-    width: 100%;
-    justify-content: center;
-}
-
 .chat {
     display: flex;
-    width: 80%;
+    width: 30vw;
     margin-right: 20%;
     flex-direction: column;
     align-items: flex-start;
@@ -31,6 +25,7 @@
 
 .main-content {
     display: flex;
+    margin-bottom: 30px;
 }
 
 .message-prompt {
@@ -60,7 +55,6 @@
     padding: 0 10px 0 10px;
     margin: 20px 0 20px 0px;
     transform: translate('50%');
-    font-weight: 100;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
@@ -71,14 +65,13 @@
     color: white;
     background-color: #0ca37f;
     padding: 0 20px 0 20px;
-    font-weight: 100;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
 
-.avatar img{
-    width: 250px;
+.avatar img {
+    width: 80%;
 }
 
 @media screen and (max-width: 768px) {
