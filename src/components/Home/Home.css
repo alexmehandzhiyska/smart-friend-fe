@@ -85,6 +85,10 @@
     width: 20vw;
 }
 
+.transcript-ref {
+    display: none;
+}
+
 @media screen and (max-width: 768px) {
     .message-prompt{
         max-width: 100%;
