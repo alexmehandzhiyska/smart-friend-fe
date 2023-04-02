@@ -115,7 +115,6 @@ const Home = () => {
                 </section>
 
                 <section className="chat">
-                    {recordingStarted && transcript && <div style={{display: "flex", justifyContent: "flex-end", width: "100%"}}><li className="user"> <p className="sent-message">{transcript}</p></li></div>}
                     {messages.map((item, index) => {
                         const className = index % 2 === 0 ? "system" : "user";
                         const flexPos = index % 2 === 0 ? "flex-start" : "flex-end"
@@ -128,6 +127,8 @@ const Home = () => {
                             </div>
                         )
                     })}
+                    {recordingStarted && transcript && <div style={{display: "flex", justifyContent: "flex-end", width: "100%"}}><li className="user"> <p className="sent-message">{transcript}</p></li></div>}
+
                 </section>
             </article>
 
