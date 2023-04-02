@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
-import Dictaphone from './Dictaphone/Dictaphone';
 import chatService from '../../services/chatService';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
@@ -19,8 +18,6 @@ const Home = () => {
     const [beginBtnDisplay, setBeginBtnDisplay] = useState('block');
     const [inputFieldDisplay, setInputFieldDisplay] = useState('block');
     const [messageSent, setMessageSent] = useState(false);
-    const [recordingStarted, setRecordingStarted] = useState(false);
-    const [textTranscript, setTextTranscript] = useState('');
     const messageRef = useRef(null);
     const transcriptRef = useRef(<p></p>);
     
