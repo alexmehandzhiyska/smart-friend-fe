@@ -1,9 +1,11 @@
 .home-page {
+    position: absolute;
+    bottom: 10px;
+    margin-left: 6vw;
     display: flex;
-    padding: 7em 0;
+    padding: 7em 0 1em 0;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 80vh;
     max-width: 100vw;
 }
 
@@ -16,8 +18,17 @@
 
 .chat {
     display: flex;
+    width: 60vw;
+    margin-right: 15%;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: flex-end;
+    padding: 0 5em;
+}
+
+.main-content {
+    display: flex;
+    margin-bottom: 30px;
 }
 
 .message-prompt {
@@ -36,10 +47,78 @@
 #message-icon {
     position: absolute;
     font-size: 1.25rem;
+    margin-top: 10px;
     right: 20px;
     color: var(--green);
 }
 
-.avatar img{
-    width: 250px;
+.user {
+    list-style: none;
+    color: white;
+    background-color: gray;
+    padding: 0 10px 0 10px;
+    margin: 20px 0 20px 0px;
+    transform: translate('50%');
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.system {
+    list-style: none;
+    color: white;
+    background-color: #0ca37f;
+    padding: 0 20px 0 20px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.imageHolder {
+    position: absolute;
+    bottom: 10px;
+}
+
+.avatar img {
+    margin-left: -5vw;
+    margin-right: -10vw;
+    width: 20vw;
+}
+
+.transcript-ref {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .chat{
+        max-height: 300px;
+        overflow:hidden;
+    }
+    .message-prompt{
+        max-width: 100vw;
+    }
+    .send-message{
+        max-width: 100vw;
+    }
+    #message{
+        max-width: 50vw;
+        margin: 20px 0px;
+    }
+    .main-content{
+        flex-direction: column;
+    }
+    .avatar{
+        position: fixed;
+    top: 250px;
+    left: 25%;
+    min-width: 250px;
+    margin-left: 0px;
+    padding-bottom: 0px;
+    }
+#message-icon{
+    margin-top:32px;
+}
+#image-holder, img{
+    min-width: 250px;
+}
 }

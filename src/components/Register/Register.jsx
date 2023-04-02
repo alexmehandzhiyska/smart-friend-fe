@@ -1,5 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { TextField } from '@mui/material';
 
 import authService from '../../services/authService';
 
@@ -40,28 +41,11 @@ const Register = () => {
           <h1 className="title">Create your account</h1>
 
           <form method="POST" onSubmit={handleSubmit(registerUser)}>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              placeholder="Username"
-              {...register("username")}
-            />
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Email"
-              {...register("email")}
-            />
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Password"
-              {...register("password")}
-            />
+            <TextField type="text" id="username" name="username" {...register("username")} label="Username" variant="outlined" sx={{my: 2}} color="success"></TextField>
+            <TextField type="email" id="email" name="email" {...register("email")} label="Email" variant="outlined" sx={{my: 2}} color="success"></TextField>
+            <TextField type="password" id="password" name="password" {...register("password")} label="Password" variant="outlined" sx={{my: 2}} color="success"></TextField>
 
+            <p>Already have an account? <Link to="/login">Log in here</Link></p>
             <input type="submit" value="Submit" className="submit primary-btn" />
           </form>
         </section>
