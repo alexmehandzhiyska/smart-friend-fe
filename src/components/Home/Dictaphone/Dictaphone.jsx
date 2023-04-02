@@ -4,7 +4,7 @@ import chatService from '../../../services/chatService';
 
 import './Dictaphone.css';
 
-const Dictaphone = ({ messages, setMessages, setMessageSent, setTranscript, setRecordingStarted, textToSpeech }) => {
+const Dictaphone = ({ messages, setMessages, setMessageSent, setTranscript, setRecordingStarted, textToSpeech, setBeginBtnDisplay, setInputFieldDisplay }) => {
     const {
         transcript,
         resetTranscript,
@@ -14,6 +14,9 @@ const Dictaphone = ({ messages, setMessages, setMessageSent, setTranscript, setR
     const transcriptRef = useRef(<p></p>);
 
     const startListening = () => {
+        setBeginBtnDisplay('none');
+        setInputFieldDisplay('none');
+
         SpeechRecognition.startListening({
             continuous: true,
             interimResults: false,

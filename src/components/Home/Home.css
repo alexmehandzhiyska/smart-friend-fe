@@ -47,6 +47,7 @@
 #message-icon {
     position: absolute;
     font-size: 1.25rem;
+    margin-top: 10px;
     right: 20px;
     color: var(--green);
 }

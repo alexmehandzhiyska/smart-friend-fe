@@ -87,6 +87,7 @@ const Home = () => {
     }
 
     const sendMessage = () => {
+        setBeginBtnDisplay('none');
         const message = messageRef.current.value;
         messageRef.current.value = '';
         setMessages([...messages, message]);
@@ -127,15 +128,17 @@ const Home = () => {
                             </div>
                         )
                     })}
-                    {recordingStarted && transcript && <div style={{display: "flex", justifyContent: "flex-end", width: "100%"}}><li className="user"> <p className="sent-message">{transcript}</p></li></div>}
 
+                    {recordingStarted && transcript && <div style={{display: "flex", justifyContent: "flex-end", width: "100%"}}><li className="user"> <p className="sent-message">{transcript}</p></li></div>}
                 </section>
             </article>
 
             <article className="send-message">
-                <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} setTranscript={setTranscript} setRecordingStarted={setRecordingStarted} textToSpeech={textToSpeech} />
+                <div style={{display: beginBtnDisplay}}>
+                    <Dictaphone setBeginBtnDisplay={setBeginBtnDisplay} setInputFieldDisplay={setInputFieldDisplay} messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} setTranscript={setTranscript} setRecordingStarted={setRecordingStarted} textToSpeech={textToSpeech} />
+                </div>
  
-                <div style={{display: beginBtnDisplay}} className="message-prompt">
+                <div style={{display: inputFieldDisplay}} className="message-prompt">
                     <input ref={messageRef} type="text" name="message" id="message" placeholder="Message"  onClick={handleImageClick}/>
                     <FontAwesomeIcon onClick={sendMessage} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
                 </div>
