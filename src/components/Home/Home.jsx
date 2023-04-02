@@ -17,6 +17,8 @@ const Home = () => {
     const [duration, setDuration] = useState(0);
     const [messages, setMessages] = useState([]);
     const [voicesLoaded, setVoicesLoaded] = useState(false);
+    const [beginBtnDisplay, setBeginBtnDisplay] = useState('block');
+    const [inputFieldDisplay, setInputFieldDisplay] = useState('block');
     const [messageSent, setMessageSent] = useState(false);
     const [recordingStarted, setRecordingStarted] = useState(false);
     const [transcript, setTranscript] = useState('');
@@ -107,7 +109,9 @@ const Home = () => {
         <section className="home-page">
             <article className="main-content">
                 <section className="avatar">
-                    <img src={imageSrc} onClick={handleImageClick} alt=''/>
+                    <div className="imageHolder">
+                        <img src={imageSrc} onClick={handleImageClick} alt=''/>
+                    </div>
                 </section>
 
                 <section className="chat">
@@ -129,8 +133,8 @@ const Home = () => {
 
             <article className="send-message">
                 <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} setTranscript={setTranscript} setRecordingStarted={setRecordingStarted} textToSpeech={textToSpeech} />
-
-                <div className="message-prompt">
+ 
+                <div style={{display: beginBtnDisplay}} className="message-prompt">
                     <input ref={messageRef} type="text" name="message" id="message" placeholder="Message"  onClick={handleImageClick}/>
                     <FontAwesomeIcon onClick={sendMessage} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
                 </div>
