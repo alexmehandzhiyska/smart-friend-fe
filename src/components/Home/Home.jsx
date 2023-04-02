@@ -19,6 +19,8 @@ const Home = () => {
     const [duration, setDuration] = useState(0);
     const [messages, setMessages] = useState([]);
     const [voicesLoaded, setVoicesLoaded] = useState(false);
+    const [beginBtnDisplay, setBeginBtnDisplay] = useState('block');
+    const [inputFieldDisplay, setInputFieldDisplay] = useState('block');
     const [messageSent, setMessageSent] = useState(false);
     const [recordingStarted, setRecordingStarted] = useState(false);
     const [textTranscript, setTextTranscript] = useState('');
@@ -131,6 +133,7 @@ const Home = () => {
     }
 
     const sendMessage = () => {
+        setBeginBtnDisplay('none');
         const message = messageRef.current.value;
         messageRef.current.value = '';
         setMessages([...messages, message]);
@@ -158,7 +161,9 @@ const Home = () => {
         <section className="home-page">
             <article className="main-content">
                 <section className="avatar">
-                    <img src={imageSrc} onClick={handleImageClick} alt=''/>
+                    <div className="imageHolder">
+                        <img src={imageSrc} onClick={handleImageClick} alt=''/>
+                    </div>
                 </section>
 
                 <section className="chat">
@@ -179,15 +184,15 @@ const Home = () => {
             </article>
 
             <article className="send-message">
-                <div className="dictaphone">
+                <div className="dictaphone" setBeginBtnDisplay={setBeginBtnDisplay} setInputFieldDisplay={setInputFieldDisplay}>
                     <button  onClick={startListening} className="primary-btn">Begin conversation</button>
                     <p ref={transcriptRef} className="transcript-ref">{transcript}</p>
                     <p>or</p>
                 </div>
                 {/* <Dictaphone messages={messages} setMessages={setMessages} setMessageSent={setMessageSent} setTranscript={setTranscript} setRecordingStarted={setRecordingStarted} textToSpeech={textToSpeech} /> */}
 
-                <div className="message-prompt">
-                    <input ref={messageRef} type="text" name="message" id="message" placeholder="Message" />
+                <div className="message-prompt" style={{display: inputFieldDisplay}}>
+                    <input ref={messageRef} type="text" name="message" id="message" placeholder="Message" onClick={handleImageClick} />
                     <FontAwesomeIcon onClick={sendMessage} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
                 </div>
             </article>

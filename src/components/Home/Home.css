@@ -1,6 +1,7 @@
 .home-page {
     position: absolute;
     bottom: 10px;
+    margin-left: 6vw;
     display: flex;
     padding: 7em 0 1em 0;
     flex-direction: column;
@@ -18,7 +19,7 @@
 .chat {
     display: flex;
     width: 60vw;
-    margin-right: 10%;
+    margin-right: 15%;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-end;
@@ -46,6 +47,7 @@
 #message-icon {
     position: absolute;
     font-size: 1.25rem;
+    margin-top: 10px;
     right: 20px;
     color: var(--green);
 }
@@ -72,9 +74,15 @@
     border-bottom-right-radius: 10px;
 }
 
+.imageHolder {
+    position: absolute;
+    bottom: 10px;
+}
+
 .avatar img {
-    /* margin-bottom: -40vh; */
-    width: 10vw;
+    margin-left: -5vw;
+    margin-right: -10vw;
+    width: 20vw;
 }
 
 .transcript-ref {
