@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
-import Dictaphone from './Dictaphone/Dictaphone';
 import chatService from '../../services/chatService';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
@@ -42,12 +41,6 @@ const Home = () => {
     };
 
     useEffect(() => {
-        if (micOn) {
-            startListening();
-        }
-    }, [micOn]);
-
-    useEffect(() => {
         if (!messageSent) {
             chatService.sendText('')
             .then(res => {
@@ -68,20 +61,6 @@ const Home = () => {
                 if (currentText == textTranscript && currentText != '') {
                     resetTranscript();
                     sendMessage(currentText);
-                    // chatService.sendText(currentText)
-                    //     .then(res => {
-                    //         console.log(res);
-                    //         textToSpeech(res.response);
-                    //         setMessages([...messages, currentText, res.response]);
-                    //         setMessageSent(true);
-
-                    //         // setTimeout(() => {
-                    //         //     startListening();
-                    //         // }, 5500);
-                    //     })
-                    //     .catch(err => {
-                    //         console.log(err);
-                    //     });
                     SpeechRecognition.stopListening();
                     clearInterval(intervalId)
                 } else {
@@ -120,17 +99,6 @@ const Home = () => {
         setVoices(utterance);
         console.log(utterance);
         speechSynthesis.speak(utterance);
-
-        // speechSynthesis.onvoiceschanged = () => {
-        //     const voice = speechSynthesis.getVoices().find(
-        //         (v) => v.lang === 'en-GB' && v.name.includes('Female')
-        //     );
-    
-        //     utterance.voice = voice;
-        //     console.log(utterance);
-        //     speechSynthesis.speak(utterance);
-        //     setVoicesLoaded(true);
-        // };
     
         utterance.onboundary = (event) => {
             let startTime, endTime;
@@ -169,24 +137,36 @@ const Home = () => {
         chatService.sendText(message)
             .then((res) => {
                 console.log(res);
+                console.log(micOn);
                 textToSpeech(res.response);
                 setImageSrc(previousImageSrc);
                 setPreviousImageSrc(imageSrc);
                 setMessages([...messages, message, res.response]);
                 setMessageSent(true);
+                console.log('in sendText');
 
                 setTimeout(() => {
-                    setDuration(0);
+                    setDuration(5000);
                     setMicOn(true);
                     setPreviousImageSrc(previousImageSrc);
                     setImageSrc(imageSrc);
 
-                }, duration)
+                }, 5000)
             })
             .catch((err) => {
                 console.log(err);
             });
     };
+
+    useEffect(() => {
+        console.log('in use effect' + micOn);
+        if (micOn) {
+            startListening();
+        } else {
+            console.log('in else');
+            SpeechRecognition.stopListening();
+        }
+    }, [micOn]);
 
     return (
         <section className="home-page">
