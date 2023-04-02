@@ -140,6 +140,7 @@ const Home = () => {
 
         chatService.sendText(message)
             .then((res) => {
+                console.log(res);
                 textToSpeech(res.response);
                 setMessages([...messages, message, res.response]);
 
@@ -151,11 +152,6 @@ const Home = () => {
                 console.log(err);
             });
     };
-
-    // const updateTranscript = () => {
-        // setTranscript(transcript);
-        // setRecordingStarted(true);
-    // }
 
     return (
         <section className="home-page">
