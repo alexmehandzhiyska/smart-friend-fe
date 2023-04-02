@@ -223,7 +223,7 @@ const Home = () => {
                 </div>
 
                 <div className="message-prompt" style={{display: inputFieldDisplay}}>
-                    <input ref={messageRef} type="text" name="message" id="message" placeholder="Message" onClick={handleImageClick} />
+                    <input ref={messageRef} type="text" name="message" id="message" placeholder="Message" />
                     <FontAwesomeIcon onClick={() => sendMessage()} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
                 </div>
             </article>
