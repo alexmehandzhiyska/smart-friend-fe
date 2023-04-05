@@ -28,7 +28,6 @@ const Home = () => {
 
     const startListening = () => {
         setBeginBtnDisplay('none');
-        setInputFieldDisplay('none');
 
         setMicOn(true);
 
@@ -61,13 +60,13 @@ const Home = () => {
                 if (currentText == textTranscript && currentText != '') {
                     SpeechRecognition.stopListening();
                     resetTranscript();
-                    sendMessage(currentText);
+                    sendMessage(false, currentText);
                     clearInterval(intervalId)
                 } else {
                     setTextTranscript(currentText);
                 }
             }
-        }, 3000);
+        }, 2000);
     }, [textTranscript]);
     
     const handleImageClick = () => {
@@ -120,7 +119,7 @@ const Home = () => {
         };
     }
 
-    const sendMessage = (text) => {
+    const sendMessage = (messageIsWritten, text) => {
         setBeginBtnDisplay('none');
         setMicOn(false);
         let message;
@@ -137,36 +136,33 @@ const Home = () => {
         chatService.sendText(message)
             .then((res) => {
                 console.log(res);
-                console.log(micOn);
+                resetTranscript();
+                
+                // SpeechRecognition.stopListening();
                 textToSpeech(res.response);
                 setImageSrc(previousImageSrc);
                 setPreviousImageSrc(imageSrc);
                 setMessages([...messages, message, res.response]);
                 setMessageSent(true);
-                console.log('in sendText');
 
+                const length = res.response.length;
+                const duration = length * 70;
+                
                 setTimeout(() => {
-                    setDuration(5000);
-                    startListening();
+                    setDuration(duration);
+                    
+                    if (!messageIsWritten) {
+                        startListening();
+                    }
                     setPreviousImageSrc(previousImageSrc);
                     setImageSrc(imageSrc);
 
-                }, 5000)
+                }, duration)
             })
             .catch((err) => {
                 console.log(err);
             });
     };
-
-    // useEffect(() => {
-    //     console.log('in use effect' + micOn);
-    //     if (micOn) {
-    //         startListening();
-    //     } else {
-    //         console.log('in else');
-    //         SpeechRecognition.stopListening();
-    //     }
-    // }, [micOn]);
 
     return (
         <section className="home-page">
@@ -204,7 +200,7 @@ const Home = () => {
 
                 <div className="message-prompt" style={{display: inputFieldDisplay}}>
                     <input ref={messageRef} type="text" name="message" id="message" placeholder="Message" />
-                    <FontAwesomeIcon onClick={() => sendMessage()} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
+                    <FontAwesomeIcon onClick={() => sendMessage(true)} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
                 </div>
             </article>
         </section >

@@ -2,6 +2,9 @@
   width: 250px;
 }
 
+.avatar-wrapper {
+  display: none;
+}
 .content-wrapper article {
   max-width: 50vw;
 }
