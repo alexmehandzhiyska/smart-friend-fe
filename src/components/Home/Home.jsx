@@ -163,14 +163,13 @@ const Home = () => {
                             </div>
                         )
                     })}
-                    {transcript && <div style={{display: "flex", justifyContent: "flex-end", width: "100%"}}><li className="user"> <p className="sent-message">{transcript}</p></li></div>}
+                    {<div className={transcript ? "user-message" : "user-message-hidden"}><li className="user"> <p className="sent-message" ref={transcriptRef}>{transcript}</p></li></div>}
                 </section>
             </article>
 
             <article className="send-message">
                 <div style={{display: beginBtnDisplay}} className="dictaphone">
                     <button  onClick={startListening} className="primary-btn">Begin conversation</button>
-                    <p ref={transcriptRef} className="transcript-ref">{transcript}</p>
                     <p style={{textAlign: "center"}}>or</p>
                 </div>
 

@@ -89,6 +89,16 @@
     display: none;
 }
 
+.user-message {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.user-message-hidden {
+    display: none;
+}
+
 @media screen and (max-width: 768px) {
     .chat{
         max-height: 400px;
