@@ -10,14 +10,15 @@ import './Home.css';
 const Home = () => {
     const [imageSrc, setImageSrc] = useState('avatar_green_normal.png');
     const [previousImageSrc, setPreviousImageSrc] = useState('talking_avatar.gif');
-    const [duration, setDuration] = useState(0);
-    const [messages, setMessages] = useState([]);
-    const [voicesLoaded, setVoicesLoaded] = useState(false);
+
     const [beginBtnDisplay, setBeginBtnDisplay] = useState('block');
     const [inputFieldDisplay, setInputFieldDisplay] = useState('block');
+
+    const [messages, setMessages] = useState([]);
+    const [voicesLoaded, setVoicesLoaded] = useState(false);
     const [messageSent, setMessageSent] = useState(false);
     const [textTranscript, setTextTranscript] = useState('');
-    const [micOn, setMicOn] = useState(false);
+
     const messageRef = useRef(null);
     const transcriptRef = useRef(<p></p>);
     
@@ -28,8 +29,7 @@ const Home = () => {
 
     const startListening = () => {
         setBeginBtnDisplay('none');
-
-        setMicOn(true);
+        setInputFieldDisplay('none');
 
         SpeechRecognition.startListening({
             continuous: true,
@@ -60,24 +60,14 @@ const Home = () => {
                 if (currentText == textTranscript && currentText != '') {
                     SpeechRecognition.stopListening();
                     resetTranscript();
-                    sendMessage(false, currentText);
+                    sendMessage(currentText);
                     clearInterval(intervalId)
                 } else {
                     setTextTranscript(currentText);
                 }
             }
-        }, 2000);
+        }, 3000);
     }, [textTranscript]);
-    
-    const handleImageClick = () => {
-        setImageSrc(previousImageSrc);
-        setPreviousImageSrc(imageSrc);
-
-        setTimeout(() => {
-            setPreviousImageSrc(previousImageSrc);
-            setImageSrc(imageSrc);
-          }, 5000);
-    };
 
     const setVoices = (utterance) => {
         const voice = speechSynthesis.getVoices().find(
@@ -91,13 +81,18 @@ const Home = () => {
         setVoicesLoaded(true);
     };
 
-    const textToSpeech = (text) => {
+    const textToSpeech = (text, chatIsActivated) => {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-GB';
         
         setVoices(utterance);
-        console.log(utterance);
         speechSynthesis.speak(utterance);
+
+        utterance.onend = () => {
+            if (chatIsActivated) {
+                startListening();
+            }
+        };
     
         utterance.onboundary = (event) => {
             let startTime, endTime;
@@ -109,55 +104,37 @@ const Home = () => {
                     endTime = event.elapsedTime;
                 }
             }
-    
-            utterance.onend = () => {
-                console.log('in');
-                console.log(endTime);
-                console.log(startTime);
-                setDuration(endTime - startTime);
-            };
         };
     }
 
-    const sendMessage = (messageIsWritten, text) => {
+    const sendMessage = (text) => {
         setBeginBtnDisplay('none');
-        setMicOn(false);
         let message;
+        let chatIsActivated = false;
 
         if (!text) {
             message = messageRef.current.value;
             messageRef.current.value = '';
         } else {
             message = text;
+            chatIsActivated = true;
         }
 
         setMessages([...messages, message]);
 
         chatService.sendText(message)
             .then((res) => {
-                console.log(res);
-                resetTranscript();
+                textToSpeech(res.response, chatIsActivated);
                 
-                // SpeechRecognition.stopListening();
-                textToSpeech(res.response);
                 setImageSrc(previousImageSrc);
                 setPreviousImageSrc(imageSrc);
                 setMessages([...messages, message, res.response]);
                 setMessageSent(true);
 
-                const length = res.response.length;
-                const duration = length * 70;
-                
                 setTimeout(() => {
-                    setDuration(duration);
-                    
-                    if (!messageIsWritten) {
-                        startListening();
-                    }
                     setPreviousImageSrc(previousImageSrc);
                     setImageSrc(imageSrc);
-
-                }, duration)
+                }, 5000)
             })
             .catch((err) => {
                 console.log(err);
@@ -175,7 +152,6 @@ const Home = () => {
 
                 <section className="chat">
                     {messages.map((item, index) => {
-                        console.log(item);
                         const className = index % 2 === 0 ? "system" : "user";
                         const flexPos = index % 2 === 0 ? "flex-start" : "flex-end"
                         
@@ -200,7 +176,7 @@ const Home = () => {
 
                 <div className="message-prompt" style={{display: inputFieldDisplay}}>
                     <input ref={messageRef} type="text" name="message" id="message" placeholder="Message" />
-                    <FontAwesomeIcon onClick={() => sendMessage(true)} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
+                    <FontAwesomeIcon onClick={() => sendMessage()} icon={faPaperPlane} id="message-icon"></FontAwesomeIcon>
                 </div>
             </article>
         </section >
